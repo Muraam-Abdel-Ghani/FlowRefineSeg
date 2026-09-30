@@ -7,5 +7,5 @@ In training, the base model is trained first separately (train.py), then the bes
 
 
 Trained Model Checkpoints:
-- EndoVis18 Holistic:   [\MuraamAbdelGhani/FlowRefineSeg-Endo18Holistic](https://huggingface.co/MuraamAbdelGhani/FlowRefineSeg-Endo18Holistic/tree/main)
+- EndoVis18 Holistic:   [MuraamAbdelGhani/FlowRefineSeg-Endo18Holistic](https://huggingface.co/MuraamAbdelGhani/FlowRefineSeg-Endo18Holistic/tree/main)
 - CholecSeg8k: [MuraamAbdelGhani/FlowRefineSeg-CholecSeg8k](https://huggingface.co/MuraamAbdelGhani/FlowRefineSeg-CholecSeg8k/tree/main)
