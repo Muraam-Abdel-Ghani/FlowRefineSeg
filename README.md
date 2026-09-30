@@ -5,3 +5,8 @@ FlowRefineSeg model is divided into the base model, defined in the PyConvFASLLin
 
 In training, the base model is trained first separately (train.py), then the best checkpoint is used and loaded to train the Refinery module (train-SPYNetOpticFlow.py).
 
+
+Trained Model Checkpoints:
+EndoVis18 Holistic:   [\MuraamAbdelGhani/FlowRefineSeg-Endo18Holistic](https://huggingface.co/MuraamAbdelGhani/FlowRefineSeg-Endo18Holistic/tree/main)
+CholecSeg8k: [MuraamAbdelGhani/FlowRefineSeg-CholecSeg8k
+](https://huggingface.co/MuraamAbdelGhani/FlowRefineSeg-CholecSeg8k/tree/main)
