@@ -87,22 +87,10 @@ class LinearSelfAttention(nn.Module):
         v = v.view(B, self.num_heads, self.head_dim, N)
 
         # compute K * V^T in linearized manner:
-        # context per head = (K @ V^T) -> shape [B, heads, head_dim, head_dim]
-        # But more efficient: compute KV^T along tokens axis:
-        # We compute S = K @ (V^T) across tokens: (head_dim x N) @ (N x head_dim) -> head_dim x head_dim
-        # Then result_tokens = S^T @ q_tokens  (but we can compute Q^T (S) style)
-        # A numerically stable & efficient implementation used below:
-        # compute KV = k @ v.transpose(-1,-2)  -> [B, heads, head_dim, head_dim]
-        KV = torch.einsum("bhdn,bhdm->bhnm", k, v)  # [B, heads, head_dim, head_dim]
-
-        # now multiply: out_per_head_tokens = (KV^T @ q) along feature dim -> [B, heads, head_dim, N]
-        # we want output per token: out[..., :, n] = KV @ q[..., :, n]
-        out = torch.einsum("bhnm,bhdn->bhdn", KV, q)  # [B, heads, head_dim, N]
-
-        # reshape back -> [B, E, N]
+        KV = torch.einsum("bhdn,bhdm->bhnm", k, v) 
+        out = torch.einsum("bhnm,bhdn->bhdn", KV, q)
         out = out.reshape(B, self.embed_dim, N)
 
-        # optional normalization (per token)
         out = self.post_ln(out.permute(0, 2, 1)).permute(0, 2, 1)  # LN over embed dim
         out = out.view(B, self.embed_dim, H, W)
 
