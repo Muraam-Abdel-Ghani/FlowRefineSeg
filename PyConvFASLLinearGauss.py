@@ -25,14 +25,9 @@ def conv_dw(inp, oup, stride):
     )
 
 
-# -------------------------
-# Option A: Linear Attention
-# -------------------------
-# Kernelized attention using phi(x) = elu(x) + 1 (stable, positive)
-# Complexity: O(B * HW * D) vs O(B * (HW)^2 * D) for full MHSA.
-class LinearSelfAttention(nn.Module):
+
+class GlobalContextGating(nn.Module):
     """
-    Linearized multi-head attention over spatial tokens.
     Args:
       in_ch: input channels
       embed_dim: internal embedding dim per token (defaults to in_ch)
@@ -177,8 +172,8 @@ class PyConvFASLLinearGauss(nn.Module):
         self.layer5 = backbone.layer4
 
         # MHSA
-        self.linearselfattn1 = LinearSelfAttention(in_ch=C2, num_heads=2)
-        self.linearselfattn2 = LinearSelfAttention(in_ch=C3, num_heads=4)
+        self.gcg1 = GlobalContextGating(in_ch=C2, num_heads=2)
+        self.gcg2 = GlobalContextGating(in_ch=C3, num_heads=4)
 
         # Depthwise convs
         self.proc1 = nn.Conv2d(C2, C2, 1, 1, 0, groups=C2, bias=False)
@@ -214,8 +209,8 @@ class PyConvFASLLinearGauss(nn.Module):
             print(f"x1:{x1.shape}, x2:{x2.shape}, x3:{x3.shape}, x4:{x4.shape}")
 
         # Apply MHSA to x1 and x2
-        x1 = self.linearselfattn1(x1)
-        x2 = self.linearselfattn2(x2)
+        x1 = self.gcg1(x1)
+        x2 = self.gcg2(x2)
 
         # Depthwise convs
         s1 = self.proj1(self.proc1(x1))
